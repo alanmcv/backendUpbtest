@@ -14,6 +14,8 @@ const listar = (nombre) => {
     return productoRepository.findAll();
 };
 
+const listarAgotados = () => productoRepository.findAgotados();
+
 const obtenerPorId = async (id) => {
     const producto = await productoRepository.findById(validarId(id));
     if (!producto) throw new HttpError(404, 'Producto no encontrado');
@@ -37,4 +39,4 @@ const eliminar = async (id) => {
     if (!eliminado) throw new HttpError(404, 'Producto no encontrado');
 };
 
-module.exports = { listar, obtenerPorId, crear, actualizar, eliminar };
+module.exports = { listar, listarAgotados, obtenerPorId, crear, actualizar, eliminar };

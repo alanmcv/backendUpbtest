@@ -37,6 +37,13 @@
       }
     },
     {
+      "name": "Listar productos agotados",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/productos/agotados", "host": ["{{baseUrl}}"], "path": ["api", "productos", "agotados"] }
+      }
+    },
+    {
       "name": "Obtener producto por id",
       "request": {
         "method": "GET",

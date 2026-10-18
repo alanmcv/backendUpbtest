@@ -4,7 +4,7 @@ const HttpError = require('../utils/http-error');
 const validarCampos = (body, { parcial }) => {
     const errores = [];
     const datos = {};
-    const { nombre, precio, stock } = body || {};
+    const { nombre, descripcion, precio, stock, categoriaId } = body || {};
 
     if (nombre !== undefined) {
         if (typeof nombre !== 'string' || nombre.trim() === '') errores.push('"nombre" debe ser un texto no vacío');
@@ -28,8 +28,25 @@ const validarCampos = (body, { parcial }) => {
         datos.stock = 0;
     }
 
+    // null o "" borran la descripción
+    if (descripcion !== undefined) {
+        if (descripcion !== null && typeof descripcion !== 'string') errores.push('"descripcion" debe ser un texto');
+        else if (descripcion && descripcion.length > 500) errores.push('"descripcion" no puede superar 500 caracteres');
+        else datos.descripcion = descripcion?.trim() || null;
+    } else if (!parcial) {
+        datos.descripcion = null;
+    }
+
+    // null deja el producto sin categoría; si el id no existe lo rechaza la llave foránea
+    if (categoriaId !== undefined) {
+        if (categoriaId !== null && (!Number.isInteger(categoriaId) || categoriaId <= 0)) errores.push('"categoriaId" debe ser un entero positivo o null');
+        else datos.categoriaId = categoriaId;
+    } else if (!parcial) {
+        datos.categoriaId = null;
+    }
+
     if (parcial && Object.keys(datos).length === 0 && errores.length === 0) {
-        errores.push('Debes enviar al menos un campo: nombre, precio o stock');
+        errores.push('Debes enviar al menos un campo: nombre, descripcion, precio, stock o categoriaId');
     }
 
     if (errores.length > 0) throw new HttpError(400, errores.join(', '));
@@ -46,9 +63,12 @@ const actualizarProductoDto = (body) => validarCampos(body, { parcial: true });
 const productoResponseDto = (producto) => ({
     id: producto.id,
     nombre: producto.nombre,
+    descripcion: producto.descripcion,
     precio: producto.precio,
     stock: producto.stock,
+    categoria: producto.categoriaId ? { id: producto.categoriaId, nombre: producto.categoriaNombre } : null,
     createdAt: producto.createdAt,
+    updatedAt: producto.updatedAt,
 });
 
 module.exports = { crearProductoDto, actualizarProductoDto, productoResponseDto };

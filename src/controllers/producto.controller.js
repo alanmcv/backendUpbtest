@@ -5,13 +5,18 @@ const { crearProductoDto, actualizarProductoDto, productoResponseDto } = require
 // por eso no hace falta try/catch aquí
 
 const listar = async (req, res) => {
-    const productos = await productoService.listar(req.query.nombre);
+    const productos = await productoService.listar(req.query);
     res.json(productos.map(productoResponseDto));
 };
 
+// Igual que listar pero siempre con stock 0; también acepta ?nombre= y ?categoria=
 const agotados = async (req, res) => {
-    const productos = await productoService.listarAgotados();
+    const productos = await productoService.listar({ ...req.query, agotados: 'true' });
     res.json(productos.map(productoResponseDto));
+};
+
+const resumen = async (req, res) => {
+    res.json(await productoService.resumen());
 };
 
 const obtener = async (req, res) => {
@@ -36,4 +41,4 @@ const eliminar = async (req, res) => {
     res.status(204).send();
 };
 
-module.exports = { listar, agotados, obtener, crear, actualizar, eliminar };
+module.exports = { listar, agotados, resumen, obtener, crear, actualizar, eliminar };

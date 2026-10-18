@@ -2,7 +2,7 @@
 
 API REST (Express 5 + PostgreSQL) con arquitectura por capas, desplegada en Render.
 
-- **API en producción:** https://backendupbtest.onrender.com
+- **API en producción:** https://backendupbtest-gp4v.onrender.com
 - **Frontend que la consume:** https://test2-9f047.web.app ([repositorio](https://github.com/alanmcv/my-project))
 
 > Render (plan gratis) apaga el servidor tras 15 min sin uso: la primera petición puede tardar ~1 minuto.
